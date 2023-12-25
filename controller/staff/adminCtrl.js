@@ -1,44 +1,45 @@
+const AsyncHandler = require("express-async-handler");
 const Admin = require("../../model/Staff/Admin");
+const generateToken = require("../../utils/generateToken");
+const verifyToken = require("../../utils/verifyToken");
 //@desc Register admin
 //@route POST /api/admins/register
 //@access private
-exports.registerAdminCtrl = async (req, res) => {
+exports.registerAdminCtrl = AsyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  try {
-    const adminFound = await Admin.findOne({ email });
-    if (adminFound) {
-      res.json("Admin exists");
-    }
 
-    const user = await Admin.create({ name, email, password });
-    res.status(201).json({
-      status: "success",
-      data: user,
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
-    });
+  const adminFound = await Admin.findOne({ email });
+  if (adminFound) {
+    throw new Error("Admin Exists");
   }
-};
+
+  const user = await Admin.create({ name, email, password });
+  res.status(201).json({
+    status: "success",
+    data: user,
+  });
+});
 
 //@desc login admins
 //@route POST /api/v1/admins/login
 //@access private
-exports.loginAdminCtrl = (req, res) => {
-  try {
-    res.status(201).json({
-      status: "success",
-      data: "Admin has been logged in",
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
-    });
+exports.loginAdminCtrl = AsyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await Admin.findOne({ email });
+  if (!user) {
+    return res.json({ message: "Invalid login credentials" });
   }
-};
+  if (user && (await user.verifyPassword(password))) {
+    const token = generateToken(user._id);
+    if (token) {
+      const verify = verifyToken(token);
+    }
+    return res.json({ data: generateToken(user._id) });
+  } else {
+    return res.json({ message: "Invalid login credentials" });
+  }
+});
 
 //@desc Get all admins
 //@route GET /api/v1/admins
@@ -60,19 +61,19 @@ exports.getAdminsCtrl = (req, res) => {
 //@desc Get single admin
 //@route Get /api/admins/:id
 //@access private
-exports.getAdminCtrl = (req, res) => {
-  try {
+exports.getAdminProfileCtrl = AsyncHandler(async (req, res) => {
+  const admin = await Admin.findById(req.userAuth).select(
+    "-password -createdAt -updatedAt"
+  );
+  if (!admin) {
+    throw new Error("Admin not found");
+  } else {
     res.status(200).json({
       status: "success",
-      data: "Single admin",
-    });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
+      data: admin,
     });
   }
-};
+});
 
 //@desc Update admin
 //@route Update /api/admins/:id
