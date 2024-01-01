@@ -6,7 +6,7 @@ const YearGroup = require("../../model/Academic/YearGroup");
 //@route Post /api/v1/year-groups
 //@access private
 exports.createYearGroup = AsyncHandler(async (req, res) => {
-  const { name, description, academicTerm, academicYear } = req.body;
+  const { name, academicYear } = req.body;
 
   //check if exists
   const yearGroup = await YearGroup.findOne({ name });
