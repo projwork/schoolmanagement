@@ -39,7 +39,6 @@ const studentSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "ClassLevel",
-        required: true,
       },
     ],
     currentClassLevel: {
@@ -51,7 +50,6 @@ const studentSchema = new mongoose.Schema(
     academicYear: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicYear",
-      required: true,
     },
     dateAdmitted: {
       type: Date,
@@ -68,7 +66,6 @@ const studentSchema = new mongoose.Schema(
     program: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Program",
-      required: true,
     },
 
     isPromotedToLevel200: {
