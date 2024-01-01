@@ -33,8 +33,8 @@ const teacherSchema = new mongoose.Schema(
         );
       },
     },
-    //if witdrawn, the teacher will not be able to login
-    isWitdrawn: {
+    //if withdrawn, the teacher will not be able to login
+    isWithdrawn: {
       type: Boolean,
       default: false,
     },
@@ -50,7 +50,7 @@ const teacherSchema = new mongoose.Schema(
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject",
-      required: true,
+      // required: true,
     },
     applicationStatus: {
       type: String,
@@ -59,20 +59,15 @@ const teacherSchema = new mongoose.Schema(
     },
 
     program: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Program",
-      required: true,
+      type: String,
     },
     //A teacher can teach in more than one class level
     classLevel: {
       type: String,
-      ref: "ClassLevel",
-      required: true,
     },
     academicYear: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "AcademicYear",
-      required: true,
+      type: String,
+      // required: true,
     },
     examsCreated: [
       {
@@ -83,12 +78,10 @@ const teacherSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
-      required: true,
+      // required: true,
     },
     academicTerm: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "AcademicTerm",
-      required: true,
+      type: String,
     },
   },
   {
